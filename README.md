@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/banner.png" alt="Janaru — ジャーナル" width="100%" />
+</p>
+
 # Janaru / ジャーナル
 
 A save-game system for AI coding sessions.
