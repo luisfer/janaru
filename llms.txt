@@ -1,0 +1,27 @@
+# Janaru
+
+> A save-game system for AI coding sessions, plus a plain-copy voice guide. Tool-agnostic: works in Cursor, Claude Code, Codex, Aider, Copilot, ChatGPT — anywhere an AI agent reads markdown.
+
+This file is the machine-readable index of Janaru. AI agents should fetch `install.md` first, then pull only the files needed for the chosen modules.
+
+## Bootstrap
+
+- [install.md](https://raw.githubusercontent.com/luisfer/janaru/main/install.md): Step-by-step install protocol for AI agents. Detects the AI ecosystem (Cursor, Claude Code, AGENTS.md, Copilot) and wires Janaru into the right place.
+
+## Core (session continuity)
+
+- [dictionary.md](https://raw.githubusercontent.com/luisfer/janaru/main/dictionary.md): Six trigger words — `shipit`, `auditthor`, `savegame`, `loadgame`, `newgame`, `freshstart` — with exact protocols for each.
+- [ecosystem.md](https://raw.githubusercontent.com/luisfer/janaru/main/ecosystem.md): One-page project profile template (stack, commands, conventions, constraints).
+- [context.md](https://raw.githubusercontent.com/luisfer/janaru/main/context.md): Session resume-point template. Rewritten on every `savegame`.
+- [janaru.md](https://raw.githubusercontent.com/luisfer/janaru/main/janaru.md): Append-only session log template.
+- [tasks.md](https://raw.githubusercontent.com/luisfer/janaru/main/tasks.md): Original-requirements template (immutable per session).
+- [pre-commit.md](https://raw.githubusercontent.com/luisfer/janaru/main/pre-commit.md): Release checklist template.
+
+## Voice (optional copy guide)
+
+- [voice.md](https://raw.githubusercontent.com/luisfer/janaru/main/voice.md): Plain, declarative, spec-sheet voice for all user-facing text. Bans hype verbs, "not just X, it's Y" constructions, staccato closers, AI-slop transitions, and decorative adjectives.
+
+## Reference
+
+- [README.md](https://raw.githubusercontent.com/luisfer/janaru/main/README.md): Human-readable overview.
+- [example/](https://github.com/luisfer/janaru/tree/main/example): A filled-in session, for shape reference.
