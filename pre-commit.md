@@ -1,6 +1,6 @@
 # Pre-Commit Checklist - {PROJECT} - {DATE}
 
-> Commands and conventions live in [`ecosystem.md`](./ecosystem.md). This file is the per-session checklist.
+> Commands and conventions live in [`../ecosystem.md`](../ecosystem.md). This file is the per-session checklist.
 
 ---
 

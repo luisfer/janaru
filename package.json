@@ -1,0 +1,14 @@
+{
+  "name": "janaru",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Save-game system for AI coding sessions",
+  "scripts": {
+    "test": "node --test tests/validate.test.mjs",
+    "validate": "node scripts/validate.mjs",
+    "score": "node scripts/score.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

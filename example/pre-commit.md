@@ -1,29 +1,24 @@
 # Pre-Commit Checklist - auth-refactor - 2026-01-15
 
-## Repo Setup (fill once per repo)
-- Repo root: `~/projects/my-app`
-- Test: `npm test`
-- Build: `npm run build`
-- Lint: `npm run lint`
-- Format: `npm run format`
-- Typecheck: `npm run typecheck`
+> Commands and conventions live in `journals/ecosystem.md`. This file is the per-session checklist.
 
 ---
 
 ## Before Commit
 - [ ] Pull latest main/master (if required)
-- [ ] Ensure working tree is clean except intended changes
-- [ ] Update changelog or docs if needed
-- [ ] Run formatter: `npm run format`
-- [ ] Run lint: `npm run lint`
-- [ ] Run typecheck: `npm run typecheck`
-- [ ] Run tests: `npm test`
-- [ ] Run build: `npm run build`
+- [ ] Working tree is clean except intended changes
+- [ ] Updated changelog or docs if needed
+- [ ] Ran formatter
+- [ ] Ran lint
+- [ ] Ran typecheck
+- [ ] Ran tests
+- [ ] Ran build
 
-## Commit Message Style
+## Commit Message
+- Use the convention defined in `ecosystem.md` (default: Conventional Commits).
 - Format: `{TYPE}: {SHORT_SUMMARY}`
-- Types: feat | fix | chore | refactor | docs | test | perf | build | ci
 - Example: `feat: add Google OAuth login`
+- No co-author line, no "Generated with" footer.
 
 ## After Commit
 - [ ] Re-run critical smoke check (if applicable)
@@ -32,7 +27,4 @@
 
 ---
 
-## Hook Setup (optional)
-Use a hook manager (e.g., Husky / pre-commit) to enforce checks.
-Suggested default hook command:
-- `"npm run format && npm run lint && npm run typecheck && npm test"`
+*Tip: say `shipit` to run this whole checklist automatically.*

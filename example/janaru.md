@@ -8,14 +8,14 @@
 
 ---
 
-## 10:15 - Checkpoint
+## 10:15 - savegame
 - Installed next-auth, configured Google provider
 - Created [...nextauth]/route.ts with credentials + google
 - Hit issue: session callback not returning user role
 
 ---
 
-## 11:45 - Checkpoint
+## 11:45 - savegame
 - Fixed session callback - needed to fetch role from DB
 - Google OAuth working in dev
 - Email/password still works
@@ -23,7 +23,7 @@
 
 ---
 
-## 14:00 - Checkpoint
+## 14:00 - savegame
 - Added redirect to /dashboard after login
 - Tested both flows: Google and email/password
 - Found edge case: existing user signing in with Google for first time

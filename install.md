@@ -18,7 +18,8 @@ Check the project root (and parent directories, up to the user's home) for these
 
 | Priority | Marker(s) | Ecosystem | Install target |
 |---|---|---|---|
-| 1 | `.cursor/rules/` exists, OR `.cursorrules` file | **Cursor** | `.cursor/rules/janaru.mdc` |
+| 0 | `~/.cursor/skills/` exists, OR project `.cursor/skills/` | **Cursor (skill)** | `~/.cursor/skills/janaru/SKILL.md` (personal) and/or `.cursor/skills/janaru/SKILL.md` (project) |
+| 1 | `.cursor/rules/` exists, OR `.cursorrules` file | **Cursor (rule)** | `.cursor/rules/janaru.mdc` (thin always-on hook) |
 | 2 | `CLAUDE.md` exists at project root | **Claude Code (project)** | Append to `CLAUDE.md` |
 | 3 | `.claude/` directory exists | **Claude Code (project, dir form)** | `.claude/CLAUDE.md` |
 | 4 | `~/.claude/skills/` exists (user home) | **Claude Code (skills)** | `~/.claude/skills/janaru/SKILL.md` |
@@ -32,6 +33,8 @@ Check the project root (and parent directories, up to the user's home) for these
 
 ```bash
 # Run these from the project root
+test -d ~/.cursor/skills && echo "cursor-skills"
+ls .cursor/skills/ 2>/dev/null
 ls .cursor/rules/ 2>/dev/null
 test -f CLAUDE.md && echo "claude-md"
 test -d .claude && echo "claude-dir"
@@ -47,8 +50,8 @@ test -f .github/copilot-instructions.md && echo "copilot"
 Ask the user this exact question, single-select:
 
 > **Which AI tool do you use most in this project?**
-> 1. Cursor → I'll create `.cursor/rules/janaru.mdc`
-> 2. Claude Code → I'll create `CLAUDE.md`
+> 1. Cursor → I'll create `.cursor/rules/janaru.mdc` and install the skill
+> 2. Claude Code → I'll create `CLAUDE.md` and/or a Claude skill
 > 3. Codex / Aider / Cline / generic → I'll create `AGENTS.md`
 > 4. GitHub Copilot → I'll create `.github/copilot-instructions.md`
 > 5. All of them → I'll create one of each.
@@ -63,7 +66,7 @@ Janaru has two independent modules. Ask the user which they want, or install bot
 
 | Module | Files | Purpose |
 |---|---|---|
-| **Core (always)** | `dictionary.md`, `ecosystem.md`, `context.md`, `janaru.md`, `tasks.md`, `pre-commit.md` | Save/load/audit/ship trigger words and journaling system |
+| **Core (always)** | `dictionary.md`, `ecosystem.md`, `context.md`, `janaru.md`, `tasks.md`, `pre-commit.md`, `skill/SKILL.md` | Save/load/audit/ship trigger words and journaling system |
 | **Voice (optional)** | `voice.md` | Plain, declarative copy guide for user-facing text |
 
 Fetch only the modules the user wants. URLs are listed in `llms.txt` at the repo root.
@@ -76,16 +79,16 @@ Fetch only the modules the user wants. URLs are listed in `llms.txt` at the repo
 
    ```
    journals/
-     dictionary.md      ← copy from janaru
+     dictionary.md      ← copy from janaru (version-pinned)
      ecosystem.md       ← copy template from janaru, then help the user fill it in
-     <today>/           ← e.g. 2026-04-18/
+     <today>/           ← e.g. 2026-07-10/
        tasks.md         ← copy template
        janaru.md        ← copy template
        context.md       ← copy template
        pre-commit.md    ← copy template
    ```
 
-   Use today's date from `date +%Y-%m-%d`. Do not estimate.
+   Use today's date from `date +%Y-%m-%d`. Do not estimate. Path is `journals/YYYY-MM-DD/` — no project-name subfolder.
 
 2. Fetch each file from the URLs in `llms.txt` and write it to the path above.
 
@@ -109,16 +112,42 @@ Pick the first applicable.
 
 ## Step 6 — Wire it into the AI's instruction file
 
-For **each ecosystem detected in Step 1**, append the following block to the install target. Replace `{TARGETS}` with the actual files installed.
+For **each ecosystem detected in Step 1**, install as follows.
 
-### Block to append
+### Cursor skill
+
+Copy `skill/SKILL.md` from the Janaru index to:
+
+- Personal (preferred for multi-project use): `~/.cursor/skills/janaru/SKILL.md`
+- And/or project-local: `.cursor/skills/janaru/SKILL.md`
+
+### Thin Cursor rule (`.cursor/rules/janaru.mdc`)
+
+```mdc
+---
+description: Janaru session-continuity protocol
+alwaysApply: true
+---
+
+## Janaru
+
+This project uses Janaru for session continuity.
+
+- **Trigger words** (`shipit`, `auditthor`, `savegame`, `loadgame`, `newgame`, `freshstart`): follow the Janaru skill if available, else [`journals/dictionary.md`](../../journals/dictionary.md).
+- **Project profile:** [`journals/ecosystem.md`](../../journals/ecosystem.md). Read it at the start of every session before asking about stack, commands, or conventions.
+- **Session state:** `journals/<date>/context.md`. On `loadgame`, read the most recent one and continue from its "Next" section without re-asking.
+
+Spec source: <https://github.com/luisfer/janaru>
+```
+
+### Block to append (CLAUDE.md / AGENTS.md / Copilot)
 
 ```markdown
 ## Janaru
 
 This project uses Janaru for session continuity and (optionally) a plain-copy voice guide.
 
-- **Trigger words** are defined in `journals/dictionary.md`. When the user says one of them (`shipit`, `auditthor`, `savegame`, `loadgame`, `freshstart`), follow that word's protocol exactly.
+- **Trigger words** are defined in `journals/dictionary.md` (or the Janaru skill). When the user says one of them (`shipit`, `auditthor`, `savegame`, `loadgame`, `newgame`, `freshstart`), follow that word's protocol exactly.
 - **Project profile** is in `journals/ecosystem.md`. Read it at the start of every session before asking about stack, commands, or conventions.
 - **Session state** lives in `journals/<date>/context.md`. On `loadgame`, read the most recent one and continue from its "Next" section without re-asking.
 - **Voice guide** (if installed): all user-facing copy follows `{VOICE_PATH}`. Read it before writing UI strings, landing pages, READMEs, or any text humans will read.
@@ -126,35 +155,9 @@ This project uses Janaru for session continuity and (optionally) a plain-copy vo
 Spec source: <https://github.com/luisfer/janaru>
 ```
 
-### Per-ecosystem notes
+### Claude Code skill (`~/.claude/skills/janaru/SKILL.md`)
 
-- **Cursor (`.cursor/rules/janaru.mdc`):** wrap the block with the standard Cursor rule frontmatter:
-
-  ```mdc
-  ---
-  description: Janaru session-continuity and voice protocol
-  alwaysApply: true
-  ---
-
-  <block here>
-  ```
-
-- **Claude Code (`CLAUDE.md`):** append the block to the end of the file under a `## Janaru` heading. If `CLAUDE.md` doesn't exist, create it with just this block.
-
-- **Claude Code skill (`~/.claude/skills/janaru/SKILL.md`):** wrap with skill frontmatter:
-
-  ```markdown
-  ---
-  name: janaru
-  description: Session continuity (savegame/loadgame) and plain-copy voice guide. Use when the user says shipit, auditthor, savegame, loadgame, or freshstart, or when writing user-facing copy.
-  ---
-
-  <block here>
-  ```
-
-- **AGENTS.md:** append under a `## Janaru` heading.
-
-- **`.github/copilot-instructions.md`:** append under a `## Janaru` heading.
+Copy the same `skill/SKILL.md` body (frontmatter already compatible).
 
 ---
 
@@ -163,20 +166,22 @@ Spec source: <https://github.com/luisfer/janaru>
 After install, print a summary:
 
 ```
-Janaru installed.
+Janaru installed (v3).
 
 Files created:
   journals/dictionary.md
   journals/ecosystem.md
-  journals/2026-04-18/{tasks,janaru,context,pre-commit}.md
+  journals/2026-07-10/{tasks,janaru,context,pre-commit}.md
   docs/voice.md           (if voice module installed)
 
 Wired into:
+  ~/.cursor/skills/janaru/SKILL.md
   .cursor/rules/janaru.mdc
   CLAUDE.md
   AGENTS.md
 
 Try it: say "savegame" to test, or "loadgame" in a fresh session.
+Validate: node path/to/janaru/scripts/validate.mjs journals
 ```
 
 If anything failed (network error, write permission, etc.), list the failures and stop. Do not attempt repairs without asking.
@@ -185,10 +190,10 @@ If anything failed (network error, write permission, etc.), list the failures an
 
 ## Idempotency
 
-If Janaru is already installed (any of the wire-in blocks already exist), do **not** duplicate. Compare and update only what changed. If the dictionary or voice file already exists with local edits, ask before overwriting.
+If Janaru is already installed (any of the wire-in blocks already exist), do **not** duplicate. Compare and update only what changed. If the dictionary or voice file already exists with local edits, ask before overwriting. Prefer updating the skill + thin rule; keep local `ecosystem.md` and dated journals intact.
 
 ---
 
 ## Uninstall (for reference)
 
-To remove Janaru, delete the `journals/` folder and remove the `## Janaru` block from each AI instruction file. Lockfiles, source code, and `.git/` are never touched.
+To remove Janaru, delete the `journals/` folder, remove the `## Janaru` block from each AI instruction file, and delete `~/.cursor/skills/janaru` / `.cursor/skills/janaru` / `~/.claude/skills/janaru` if present. Lockfiles, source code, and `.git/` are never touched.
